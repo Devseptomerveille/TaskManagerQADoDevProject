@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: taskmanager_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: taskmanagerdb
+      MYSQL_USER: taskuser
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: ./backend
+    container_name: taskmanager_backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+
+  frontend:
+    build: ./frontend
+    container_name: taskmanager_frontend
+    ports:
+      - "5173:5173"
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: taskmanager_jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+
+  nodered:
+    image: nodered/node-red
+    container_name: taskmanager_nodered
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered_data:/data
+
+volumes:
+  mysql_data:
+  jenkins_data:
+  nodered_data:
