@@ -31,9 +31,10 @@ services:
     build: ./backend
     container_name: taskmanager_backend
     ports:
-      - "8000:8000"
+      - "8000:80"
     depends_on:
       - mysql
+
 
   frontend:
     build: ./frontend
